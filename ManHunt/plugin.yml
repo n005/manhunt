@@ -1,0 +1,9 @@
+name: ManHunt #nom du plugin
+main: fr.n005.hunt.Main
+author: n005 #Auteur du plugin
+version: 1.0 #Version du plugin
+api-version: 1.14 #Version sur laquelle le plugin fonctionnera
+
+commands:
+  hunter:
+    description: Hunter commands.
