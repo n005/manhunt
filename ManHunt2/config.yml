@@ -1,18 +1,31 @@
 avance: 1
-nb_potions: 0
-potionduration: 3
-strengh: true
-resitance: true
-fire_resitance: true
+
+potion:
+    nb_potions: 0
+    potionduration: 3
+    strengh: true
+    resitance: true
+    fire_resitance: true
+
 nb_vie: 3
+
 looting: true
-hunted_info: true
-hunted_distance: 50
-hunter_info: true
-hunter_distance: 500
-piglin_drop: true
-pearldropchance: 35
-givecompass: true
-customcraft: false
+
+hunted:
+    hunted_info: true
+    hunted_distance: 50
+
+hunter:
+    hunter_info: true
+    hunter_distance: 500
+
+piglin:
+    piglin_drop: true
+    pearldropchance: 35
+    
+compass:
+    givecompass: true
+    customcraft: false
+
 keepinvhunted: false
 restockbug: false

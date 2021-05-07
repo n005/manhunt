@@ -23,7 +23,7 @@ public class Commands implements CommandExecutor {
 			  if (args[0].equalsIgnoreCase("config")) {
 				  
 				  ConfigGui gui = new ConfigGui();
-				  gui.openInventory(player);
+				  gui.openInventory(player,"main");
 				  
 			  }
 			  else {

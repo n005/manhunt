@@ -1,15 +1,20 @@
 package fr.n005.hunt;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class Config {
 
 	private static Main plugin;
+	private static String current; 
     public static void initialize(Main instance) {
         plugin = instance;
     }
@@ -18,12 +23,11 @@ public class Config {
 	{
 		Boolean c = plugin.getConfig().getBoolean(detail);
 		if (c) {
-			return createGuiItem(Material.GREEN_WOOL, "ON", detail);
+			return createGuiItem(Material.LIME_CONCRETE, "ON", detail);
 		}
 		else {
-			return createGuiItem(Material.RED_WOOL, "OFF", detail);
+			return createGuiItem(Material.RED_CONCRETE, "OFF", detail);
 		} 
-		//return createGuiItem(Material.RED_WOOL, "OFF");
 	}
 
     protected static ItemStack createGuiItem(final Material material, final String name, final String... lore) {
@@ -41,18 +45,91 @@ public class Config {
         return item;
     }
     
-    public static void changeconfig(List<String> list)
+    public static void changeconfig(List<String> list, Player p)
     {
-    	if(list.get(0).equalsIgnoreCase("strengh")) {plugin.getConfig().set("strengh", !plugin.getConfig().getBoolean("strengh"));}
-    	if(list.get(0).equalsIgnoreCase("resitance")) {plugin.getConfig().set("resitance", !plugin.getConfig().getBoolean("resitance"));}
-    	if(list.get(0).equalsIgnoreCase("fire_resitance")) {plugin.getConfig().set("fire_resitance", !plugin.getConfig().getBoolean("fire_resitance"));}
-    	if(list.get(0).equalsIgnoreCase("looting")) {plugin.getConfig().set("looting", !plugin.getConfig().getBoolean("looting"));}
-    	if(list.get(0).equalsIgnoreCase("hunted_info")) {plugin.getConfig().set("hunted_info", !plugin.getConfig().getBoolean("hunted_info"));}
-    	if(list.get(0).equalsIgnoreCase("hunter_info")) {plugin.getConfig().set("hunter_info", !plugin.getConfig().getBoolean("hunter_info"));}
-    	if(list.get(0).equalsIgnoreCase("piglin_drop")) {plugin.getConfig().set("piglin_drop", !plugin.getConfig().getBoolean("piglin_drop"));}
-    	if(list.get(0).equalsIgnoreCase("givecompass")) {plugin.getConfig().set("givecompass", !plugin.getConfig().getBoolean("givecompass"));}
-    	if(list.get(0).equalsIgnoreCase("customcraft")) {plugin.getConfig().set("customcraft", !plugin.getConfig().getBoolean("customcraft"));}
-    	if(list.get(0).equalsIgnoreCase("keepinvhunted")) {plugin.getConfig().set("keepinvhunted", !plugin.getConfig().getBoolean("keepinvhunted"));}
-    	if(list.get(0).equalsIgnoreCase("restockbug")) {plugin.getConfig().set("restockbug", !plugin.getConfig().getBoolean("restockbug"));}
+    	if (getCurrentInv().equals("main"))
+    	{
+    		
+    		for(String key : SubConf(""))
+    		{
+    			if(list.get(0).equalsIgnoreCase(key)) {
+    			Config.setCurrentInv(key);
+    			}
+    		}
+    		
+    		for(String key : BooleanList(""))
+    		{
+    			if(list.get(0).equalsIgnoreCase(key)) {plugin.getConfig().set(key, !plugin.getConfig().getBoolean(key));}
+    		}
+    	}
+    	else
+    	{
+    		for(String key : BooleanList(getCurrentInv()))
+    		{
+    			if(list.get(0).equalsIgnoreCase(key)) {plugin.getConfig().set(key, !plugin.getConfig().getBoolean(key));}
+    		}
+    	}
+    }
+    
+    public static List<String> BooleanList(String sect)
+    {
+    	List<String> list = new ArrayList<String>();
+    	for(String key : plugin.getConfig().getConfigurationSection(sect).getKeys(false))
+    	{
+    		String value = plugin.getConfig().getString(sect+"."+key);
+    		if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
+    			list.add(key);
+    		} else {
+    		    // throw some exception
+    		}
+    	}
+		return list;
+    }
+    
+    public static List<String> SubConf(String sect)
+    {
+    	List<String> list = new ArrayList<String>();
+    	for(String key : plugin.getConfig().getConfigurationSection(sect).getKeys(false))
+    	{
+    		String value = plugin.getConfig().getString(sect+"."+key);
+    		if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false") || StringUtils.isNumericSpace(value)) {
+    		} else {
+    			list.add(key);
+    		}
+    	}
+		return list;
+    }
+    
+    public static List<ItemStack> ItemList(String root)
+    {
+    	List<ItemStack> list = new ArrayList<ItemStack>();
+		if(root=="main") {
+			for(String key : BooleanList(""))
+			{
+				list.add(Woolinfo(key));
+			}
+			for (String key : SubConf(""))
+			{
+				list.add(createGuiItem(Material.BLUE_CONCRETE, key, key));
+			}
+		}
+		else
+			{
+				for(String key : BooleanList(getCurrentInv()))
+				{
+					list.add(Woolinfo(key));
+				}
+			}
+		return list;
+    	
+    }
+    
+    
+    public static void setCurrentInv(String var1) {
+		current = var1;
+    }
+    
+    public static String getCurrentInv() {
+		return current;
     }
 }
